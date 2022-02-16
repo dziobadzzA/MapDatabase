@@ -1,0 +1,13 @@
+[
+    {
+        "name": "deviceTwo",
+        "path": "path2",
+        "params": "T;V;C"
+    },
+    {
+        "name": "deviceOne",
+        "path": "path1",
+        "params": "T;V;C"
+    }
+]
+

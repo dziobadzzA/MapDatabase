@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+{% load static from staticfiles %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link href="{% static 'static/css/style.css' %}">
+</head>
+<body>
+ {% csrf_token %}
+<script src="{% static 'static/js/highcharts.js' %}"></script>
+<script src="{% static 'static/js/series-label.js' %}"></script>
+<script src="{% static 'static/js/exporting.js' %}"></script>
+<script src="{% static 'static/js/export-data.js' %}"></script>
+<script src="{% static 'static/js/accessibility.js' %}"></script>
+
+
+
+ <div align="center">
+     <H4 class="paramStyle">Устройство/поток</H4>
+     <select id="devices" class="paramStyle">
+
+     </select>
+     <H4 class="paramStyle"> тип выводимого параметра</H4>
+     <select id="param" class="paramStyle">
+
+     </select>
+ </div>
+
+<figure class="highcharts-figure">
+  <div id="container"></div>
+</figure>
+<div align="center">
+   <h3>Показать показатели за период</h3>
+    <p>с</p><input type="datetime-local" id="time_from" value="2022-01-01T00:00:00">
+    <p>по</p><input type="datetime-local" id="time_to" value="2022-02-01T00:00:00">
+</div>
+
+<figure class="highcharts-figure">
+  <div id="container_select"></div>
+</figure>
+<script src="{% static 'static/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'static/js/user.js' %}"></script>
+<script>
+
+    Highcharts.chart('container', {
+
+    title: {
+        text: 'Текущее состояние объектов наблюдения'
+        },
+
+    yAxis: {
+        title: {
+            text: 'Температура'
+        }
+    },
+
+    xAxis: {
+        accessibility: {
+        rangeDescription: 'Время'
+        }
+    },
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+        label: {
+            connectorAllowed: false
+        },
+        pointStart: {{ point }}
+     }
+    },
+
+
+  series: [ {% for item in zipped %}{
+        name: '{{ item.0 }}',
+        data: {{ item.1 }}
+    },{% endfor %}
+  ],
+
+
+    responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+});
+
+
+Highcharts.chart('container_select', {
+
+    title: {
+        text: 'Селектированное состояние объектов наблюдения'
+        },
+
+    yAxis: {
+        title: {
+            text: 'Температура'
+        }
+    },
+
+    xAxis: {
+        accessibility: {
+        rangeDescription: 'Время'
+        }
+    },
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+        label: {
+            connectorAllowed: false
+        },
+        pointStart: {{ pointSelect }}
+     }
+    },
+
+  series: [ {% for item in zippedSelect %}{
+        name: '{{ item.0 }}',
+        data: {{ item.1 }}
+    },{% endfor %}
+  ],
+
+
+    responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+});
+
+</script>
+</body>
+</html>
